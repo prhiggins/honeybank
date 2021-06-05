@@ -13,6 +13,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from flask_honeyauth import HTTPBasicAuth
 import honeyroutes
+from database_manager import DBManager
+
+import time
 
 app = flask.Flask(__name__)
 CONFIG = config.configuration()
@@ -33,6 +36,8 @@ honey_users = {
         "winston": generate_password_hash("honeybear")
 }
 
+# set up the mock database
+db = DBManager()
 # Authentication handlers
 # this is where we define the logic to authenticate users and verify honeytokens
 
@@ -61,7 +66,12 @@ def check_honeytoken(auth):
 @auth.login_required(honey=honeyroutes.honey_index)
 def index():
     app.logger.debug("Main page entry")
-    return flask.render_template('index.html')
+    username = g.flask_httpauth_user["username"]
+    balance = db.get_balance_for_user(username)
+
+    transactions = db.get_transactions_for_user(username)
+
+    return flask.render_template('index.html', balance=balance, tx_history=transactions)
 
 # error handler for 404s
 @app.errorhandler(404)
@@ -70,6 +80,12 @@ def page_not_found(error):
     flask.session['linkback'] = flask.url_for("index")
     return flask.render_template('404.html'), 404
 
+@app.context_processor
+def datetime_processor():
+	def format_date(utc_seconds):
+		return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(utc_seconds))
+
+	return dict(format_date=format_date)
 if __name__ == "__main__":
     print("Opening for global access on port {}".format(CONFIG.PORT))
     app.run(port=CONFIG.PORT, host="0.0.0.0")

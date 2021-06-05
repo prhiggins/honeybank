@@ -4,5 +4,27 @@
 	</head>
 <body>
 	<h1>Your Online Banking Portal</h1>
-	<p>Welcome, {{g.flask_httpauth_user['username']}}!</p>
+	<p>Welcome, {{ g.flask_httpauth_user['username'] }}!</p>
+	<p><a href="./transfer">Begin a transfer here.</a></p>
+	<h2>Your Balance</h2>
+	{% if balance %}
+	<p>${{ balance }}<p>
+	{% else %}
+	<p>Balance currently unavailable.<p>
+	{% endif %}
+
+	<h2>Your Recent Transactions</h2>
+	{% if tx_history %}
+		<table>
+			{% for tx in tx_history %}
+			<tr><td> <b>To</b>: {{tx.recipient}}</td>
+				<td> <b>From</b>: {{tx.sender}}</td>
+				<td> ${{tx.amount}}</td>
+				<td> {{format_date(tx.timestamp)}}</td>
+			</tr>
+			{% endfor %}
+		</table>
+		{% else %}
+		<p>No transaction history available.<p>
+		{% endif %}
 </body>
