@@ -46,7 +46,7 @@ class DBManager():
 		for tx in self.transactions.values():
 			if tx.sender == username or tx.recipient == username:
 				results.append(tx)
-		print(results)
+		
 		return sorted(results, key= lambda x: x.timestamp, reverse=True)
 
 	def transfer(self, amount, destination_uid, current_user):
@@ -73,5 +73,6 @@ class HoneyDBManager(DBManager):
 	}
 
 	def __init__(self):
+
 		self.balances = HoneyDBManager.honey_balances
 		self.transactions = HoneyDBManager.honey_transactions

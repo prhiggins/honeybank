@@ -27,4 +27,7 @@
 		{% else %}
 		<p>No transaction history available.<p>
 		{% endif %}
+	{% if session.honey %}
+	<p style="color:#FF0000";>You're in the honey universe.</p>
+	{% endif %}
 </body>
