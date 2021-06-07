@@ -1,3 +1,3 @@
 Flask==2.0.1
-flask_honeyauth==1.0.0
+flask_honeyauth==1.1.0
 Werkzeug==2.0.1
