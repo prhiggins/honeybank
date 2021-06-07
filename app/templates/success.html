@@ -1,0 +1,12 @@
+<html>
+<head>
+  <title>Transaction Successful</title>
+</head>
+<body>
+<h1>Transaction Successful</h1>
+<p>Return to the home page <a href="{{ url_for("index") }}">here</a>.</p>
+{% if session.honey %}
+<p style="color:#FF0000";>You're in the honey universe.</p>
+{% endif %}
+</body>
+</html>

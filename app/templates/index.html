@@ -5,7 +5,7 @@
 <body>
 	<h1>Your Online Banking Portal</h1>
 	<p>Welcome, {{ g.flask_httpauth_user['username'] }}!</p>
-	<p><a href="./transfer">Begin a transfer here.</a></p>
+	<p><a href="./transfer_form">Begin a transfer here.</a></p>
 	<h2>Your Balance</h2>
 	{% if balance %}
 	<p>${{ balance }}<p>

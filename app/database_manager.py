@@ -43,15 +43,24 @@ class DBManager():
 
 	def get_transactions_for_user(self, username):
 		results = []
-		for tx in self.transactions.values():
+		for key in self.transactions:
+			tx = self.transactions[key]
 			if tx.sender == username or tx.recipient == username:
 				results.append(tx)
-		
+
 		return sorted(results, key= lambda x: x.timestamp, reverse=True)
 
 	def transfer(self, amount, destination_uid, current_user):
+		if self.balances[current_user] < amount:
+			return None
+
 		tx = Transaction(amount, current_user, destination_uid, time.time())
-		self.transactions.append(tx)
+
+		# debit the sender, credit the recipient
+		self.balances[current_user] -= amount
+		self.balances[destination_uid] += amount
+
+		self.transactions[uuid.uuid4()] = tx
 		return tx
 
 	def get_balance_for_user(self, username):

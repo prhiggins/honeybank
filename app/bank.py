@@ -73,6 +73,37 @@ def index():
 
     return flask.render_template('index.html', balance=balance, tx_history=transactions)
 
+# for making transfers
+@app.route("/transfer", methods=['POST'])
+@auth.login_required(honey=honeyroutes.honey_transfer)
+def transfer():
+    app.logger.debug("transfer submitted")
+    username = g.flask_httpauth_user["username"]
+    balance = db.get_balance_for_user(username)
+
+    recipient = request.form['recipient']
+    amount = float(request.form['amount'])
+
+    try:
+        result = db.transfer(amount, recipient, username)
+    except KeyError as e:
+        return flask.render_template('failure.html')
+        
+    if result is not None:
+        return flask.render_template('success.html')
+
+    return flask.render_template('failure.html')
+
+# for making transfers
+@app.route("/transfer_form")
+@auth.login_required(honey=honeyroutes.honey_transfer_form)
+def transfer_form():
+    app.logger.debug("transfer page reached")
+    username = g.flask_httpauth_user["username"]
+    balance = db.get_balance_for_user(username)
+
+    return flask.render_template('transfer.html', balance=balance)
+
 # error handler for 404s
 @app.errorhandler(404)
 def page_not_found(error):
@@ -82,10 +113,11 @@ def page_not_found(error):
 
 @app.context_processor
 def datetime_processor():
-	def format_date(utc_seconds):
-		return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(utc_seconds))
+    def format_date(utc_seconds):
+        return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(utc_seconds))
 
-	return dict(format_date=format_date)
+    return dict(format_date=format_date)
+
 if __name__ == "__main__":
     print("Opening for global access on port {}".format(CONFIG.PORT))
     app.run(port=CONFIG.PORT, host="0.0.0.0")

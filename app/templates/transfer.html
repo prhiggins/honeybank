@@ -1,0 +1,19 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html> <head>
+	<title>Transfer | Online Banking</title>
+	</head>
+<body>
+<h1>Online Banking Transaction</h1>
+<p>Fill out the form below to initiate your transfer.</p>
+<form action="./transfer" method="POST">
+  <label for="recipient">Recipient:</label><br>
+  <input type="text" id="recipient" name="recipient"><br>
+  <label for="amount">Amount:</label><br>
+  <input type="text" id="amout" name="amount">
+  <input type="submit" value="Send">
+</form>
+{% if session.honey %}
+<p style="color:#FF0000";>You're in the honey universe.</p>
+{% endif %}
+</body>
+</html>
