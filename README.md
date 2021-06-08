@@ -31,6 +31,7 @@ honey_users = {
         "winston": generate_password_hash("honeybear")
 }
 ```
+Authenticating as a regular user will allow normal transactions. However, authentications with honey tokens will result in redirection to the honey universe, where transactions are separated.
 Author
 ----------------------------
 Patrick Higgins (phiggin5@uoregon.edu)
